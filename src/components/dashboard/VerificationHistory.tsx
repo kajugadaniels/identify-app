@@ -4,8 +4,10 @@ import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { GlassCard } from '@/components/shared/GlassCard';
 import { ScoreBadge } from '@/components/shared/ScoreBadge';
-import api from '@/lib/api';
-import { ApiResponse, VerificationHistoryItem } from '@/types';
+import { VerificationHistoryItem } from '@/types';
+
+// ── Service layer import ───────────────────────────────
+import { getVerificationHistory } from '@/services/user.service';
 
 export function VerificationHistory() {
     const [history, setHistory] = useState<VerificationHistoryItem[]>([]);
@@ -14,12 +16,10 @@ export function VerificationHistory() {
     useEffect(() => {
         async function fetchHistory() {
             try {
-                const response = await api.get<ApiResponse<VerificationHistoryItem[]>>(
-                    '/users/verifications',
-                );
-                setHistory(response.data.data ?? []);
+                const data = await getVerificationHistory();
+                setHistory(data);
             } catch {
-                // Silently fail — empty state handles this
+                // Silently fail — empty state handles the UI
             } finally {
                 setLoading(false);
             }
@@ -27,6 +27,7 @@ export function VerificationHistory() {
         fetchHistory();
     }, []);
 
+    // ── Loading state — skeleton rows ─────────────────
     if (loading) {
         return (
             <div className="flex flex-col gap-3">
@@ -37,6 +38,7 @@ export function VerificationHistory() {
         );
     }
 
+    // ── Empty state ────────────────────────────────────
     if (history.length === 0) {
         return (
             <GlassCard variant="sm" className="p-10 text-center">
@@ -45,12 +47,13 @@ export function VerificationHistory() {
                     No verifications yet
                 </p>
                 <p className="text-white/30 text-sm">
-                    Your verification history will appear here
+                    Your verification history will appear here after your first check
                 </p>
             </GlassCard>
         );
     }
 
+    // ── History rows ───────────────────────────────────
     return (
         <div className="flex flex-col gap-3">
             {history.map((item, index) => (
@@ -63,7 +66,7 @@ export function VerificationHistory() {
                     <GlassCard variant="sm" className="p-4">
                         <div className="flex items-center justify-between gap-4">
 
-                            {/* Score badge — small size */}
+                            {/* Small score badge — no animation since it's in a list */}
                             <ScoreBadge
                                 score={item.compositeScore}
                                 passed={item.passed}
@@ -71,7 +74,7 @@ export function VerificationHistory() {
                                 animate={false}
                             />
 
-                            {/* Score breakdown */}
+                            {/* Score breakdown columns */}
                             <div className="flex-1 grid grid-cols-3 gap-2">
                                 {[
                                     { label: 'Liveness', value: item.livenessScore },
@@ -87,7 +90,7 @@ export function VerificationHistory() {
                                 ))}
                             </div>
 
-                            {/* Date + status */}
+                            {/* Date + pass/fail label */}
                             <div className="text-right shrink-0">
                                 <p className="text-white/30 text-xs">
                                     {new Date(item.createdAt).toLocaleDateString()}
