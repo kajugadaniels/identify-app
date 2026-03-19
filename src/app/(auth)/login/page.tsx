@@ -7,8 +7,7 @@ import { LoginForm } from '@/components/auth/LoginForm';
 
 export default function LoginPage() {
     return (
-        <div className="min-h-[calc(100vh-4rem)] flex items-center
-                    justify-center px-4 py-12">
+        <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center px-4 py-12">
             <div className="w-full max-w-md">
 
                 {/* Header */}
@@ -35,8 +34,7 @@ export default function LoginPage() {
                             Don&apos;t have an account?{' '}
                             <Link
                                 href="/register"
-                                className="text-indigo-400 hover:text-indigo-300
-                           font-medium transition-colors"
+                                className="text-indigo-400 hover:text-indigo-300 font-medium transition-colors"
                             >
                                 Create one
                             </Link>

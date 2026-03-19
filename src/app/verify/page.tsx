@@ -281,14 +281,11 @@ export default function VerifyPage() {
                                     style={{ borderColor: 'rgba(99,102,241,0.2)' }}
                                 />
                                 <motion.div
-                                    className="absolute inset-0 rounded-full border-2
-                             border-t-indigo-500 border-r-transparent
-                             border-b-transparent border-l-transparent"
+                                    className="absolute inset-0 rounded-full border-2 border-t-indigo-500 border-r-transparent border-b-transparent border-l-transparent"
                                     animate={{ rotate: 360 }}
                                     transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
                                 />
-                                <div className="absolute inset-0 flex items-center
-                               justify-center text-2xl">
+                                <div className="absolute inset-0 flex items-center justify-center text-2xl">
                                     🔍
                                 </div>
                             </div>

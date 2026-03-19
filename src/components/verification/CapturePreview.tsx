@@ -41,8 +41,7 @@ export function CapturePreview({
 
             {/* Preview image */}
             <div
-                className="relative w-full overflow-hidden rounded-2xl
-                   border border-white/10"
+                className="relative w-full overflow-hidden rounded-2xl border border-white/10"
                 style={{
                     aspectRatio: isId ? '16/10' : '3/4',
                     maxHeight: isId ? '280px' : '380px',
@@ -72,9 +71,7 @@ export function CapturePreview({
                     initial={{ scale: 0, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
                     transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
-                    className="absolute top-3 right-3 w-8 h-8 rounded-full
-                     flex items-center justify-center text-white text-sm
-                     font-bold"
+                    className="absolute top-3 right-3 w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-bold"
                     style={{
                         background: 'linear-gradient(135deg, #059669, #34d399)',
                         boxShadow: '0 0 12px rgba(52,211,153,0.5)',

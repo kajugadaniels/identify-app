@@ -106,16 +106,13 @@ export function CameraCapture({ mode, onCapture, onError }: CameraCaptureProps) 
                         <motion.div
                             initial={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
-                            className="absolute inset-0 flex flex-col items-center
-                         justify-center gap-3"
+                            className="absolute inset-0 flex flex-col items-center justify-center gap-3"
                             style={{ background: 'rgba(0,0,0,0.7)' }}
                         >
                             <motion.div
                                 animate={{ rotate: 360 }}
                                 transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-                                className="w-10 h-10 rounded-full border-2
-                           border-t-indigo-500 border-r-transparent
-                           border-b-transparent border-l-transparent"
+                                className="w-10 h-10 rounded-full border-2 border-t-indigo-500 border-r-transparent border-b-transparent border-l-transparent"
                             />
                             <p className="text-white/60 text-sm">Starting camera…</p>
                         </motion.div>
@@ -128,8 +125,7 @@ export function CameraCapture({ mode, onCapture, onError }: CameraCaptureProps) 
                         <motion.div
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
-                            className="absolute inset-0 flex flex-col items-center
-                         justify-center gap-3 px-6 text-center"
+                            className="absolute inset-0 flex flex-col items-center justify-center gap-3 px-6 text-center"
                             style={{ background: 'rgba(0,0,0,0.85)' }}
                         >
                             <span className="text-4xl">📷</span>
@@ -214,9 +210,7 @@ export function CameraCapture({ mode, onCapture, onError }: CameraCaptureProps) 
                                         initial={{ opacity: 0, y: -8 }}
                                         animate={{ opacity: 1, y: 0 }}
                                         exit={{ opacity: 0, y: -8 }}
-                                        className="absolute top-3 left-1/2 -translate-x-1/2
-                               whitespace-nowrap px-4 py-1.5 rounded-full
-                               text-xs font-medium"
+                                        className="absolute top-3 left-1/2 -translate-x-1/2 whitespace-nowrap px-4 py-1.5 rounded-full text-xs font-medium"
                                         style={{
                                             background: 'rgba(0,0,0,0.7)',
                                             border: '1px solid rgba(255,255,255,0.12)',
@@ -235,9 +229,7 @@ export function CameraCapture({ mode, onCapture, onError }: CameraCaptureProps) 
                                         initial={{ opacity: 0, y: -8 }}
                                         animate={{ opacity: 1, y: 0 }}
                                         exit={{ opacity: 0 }}
-                                        className="absolute top-3 left-1/2 -translate-x-1/2
-                               whitespace-nowrap px-4 py-1.5 rounded-full
-                               text-xs font-medium"
+                                        className="absolute top-3 left-1/2 -translate-x-1/2 whitespace-nowrap px-4 py-1.5 rounded-full text-xs font-medium"
                                         style={{
                                             background: 'rgba(5,150,105,0.3)',
                                             border: '1px solid rgba(52,211,153,0.4)',
@@ -265,8 +257,7 @@ export function CameraCapture({ mode, onCapture, onError }: CameraCaptureProps) 
                     {/* Main capture button */}
                     <button
                         onClick={handleCapture}
-                        className="relative w-16 h-16 rounded-full transition-all duration-200
-                       active:scale-95"
+                        className="relative w-16 h-16 rounded-full transition-all duration-200 active:scale-95"
                         style={{
                             background: quality.isGood
                                 ? 'linear-gradient(135deg, #6366f1, #a78bfa)'

@@ -24,8 +24,7 @@ export default function DashboardPage() {
                 initial={{ opacity: 0, y: -12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4 }}
-                className="flex flex-col sm:flex-row sm:items-center
-                   justify-between gap-4 mb-8"
+                className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8"
             >
                 <div>
                     <h1 className="text-2xl font-bold text-white">

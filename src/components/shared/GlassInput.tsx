@@ -87,8 +87,7 @@ export const GlassInput = forwardRef<HTMLInputElement, GlassInputProps>(
                             type="button"
                             tabIndex={-1}
                             onClick={onIconRightClick}
-                            className="absolute right-3.5 text-white/40 hover:text-white/70
-                         transition-colors duration-150"
+                            className="absolute right-3.5 text-white/40 hover:text-white/70 transition-colors duration-150"
                         >
                             {iconRight}
                         </button>

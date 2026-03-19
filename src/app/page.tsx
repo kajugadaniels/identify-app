@@ -74,8 +74,7 @@ export default function LandingPage() {
                     initial={{ opacity: 0, y: -12 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5 }}
-                    className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full
-                     glass text-xs font-medium text-white/70 mb-8"
+                    className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass text-xs font-medium text-white/70 mb-8"
                 >
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
                     AI-powered identity verification
@@ -86,8 +85,7 @@ export default function LandingPage() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, delay: 0.1 }}
-                    className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight
-                     text-white leading-tight mb-6"
+                    className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-white leading-tight mb-6"
                 >
                     Verify identity{' '}
                     <span className="gradient-text">in seconds</span>
@@ -100,8 +98,7 @@ export default function LandingPage() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, delay: 0.2 }}
-                    className="text-lg sm:text-xl text-white/50 max-w-2xl mx-auto mb-10
-                     leading-relaxed"
+                    className="text-lg sm:text-xl text-white/50 max-w-2xl mx-auto mb-10 leading-relaxed"
                 >
                     Biometric face matching, liveness detection and ID document verification
                     — all in one secure, instant pipeline.
@@ -135,8 +132,7 @@ export default function LandingPage() {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.6, delay: 0.5 }}
-                    className="flex flex-wrap items-center justify-center gap-6 mt-12
-                     text-xs text-white/30"
+                    className="flex flex-wrap items-center justify-center gap-6 mt-12 text-xs text-white/30"
                 >
                     {['No credit card required', 'GDPR compliant', 'End-to-end encrypted'].map(
                         (item) => (
@@ -165,8 +161,7 @@ export default function LandingPage() {
                                 <p className="text-white font-semibold">John Doe</p>
                             </div>
                             <div
-                                className="w-12 h-12 rounded-full flex items-center
-                           justify-center text-lg font-bold text-white"
+                                className="w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold text-white"
                                 style={{
                                     background: 'linear-gradient(135deg, #059669, #34d399)',
                                     boxShadow: '0 0 20px rgba(52,211,153,0.4)',
@@ -200,8 +195,7 @@ export default function LandingPage() {
                         ))}
 
                         <div
-                            className="mt-5 pt-4 border-t border-white/[0.06] flex
-                         items-center justify-between"
+                            className="mt-5 pt-4 border-t border-white/[0.06] flex items-center justify-between"
                         >
                             <span className="text-xs text-white/40">Composite score</span>
                             <span
@@ -300,8 +294,7 @@ export default function LandingPage() {
 
             {/* ── Footer ───────────────────────────────────── */}
             <footer className="border-t border-white/[0.06] py-8">
-                <div className="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row
-                        items-center justify-between gap-4">
+                <div className="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
                     <span className="text-sm text-white/30">
                         © 2026 VerifyID. Built with security first.
                     </span>

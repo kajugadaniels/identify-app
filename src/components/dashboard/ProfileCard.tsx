@@ -76,8 +76,7 @@ export function ProfileCard() {
                 <div className="flex items-center gap-4">
                     {/* Avatar circle with gradient and first initial */}
                     <div
-                        className="w-12 h-12 rounded-full flex items-center justify-center
-                       text-white font-bold text-lg shrink-0"
+                        className="w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-lg shrink-0"
                         style={{
                             background: 'linear-gradient(135deg, #6366f1, #a78bfa)',
                             boxShadow: '0 0 16px rgba(99,102,241,0.4)',
