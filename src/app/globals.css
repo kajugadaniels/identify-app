@@ -1,7 +1,6 @@
 /* src/app/globals.css */
 
 @import "tailwindcss";
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 /* ── Tailwind v4 theme tokens ─────────────────────────
    All design tokens defined here replace tailwind.config.ts
@@ -19,7 +18,7 @@
   --color-brand-900: #1e1b4b;
 
   /* ── Font family ────────────────────────────────── */
-  --font-family-sans: 'Inter', system-ui, sans-serif;
+  --font-family-sans: var(--font-inter), system-ui, sans-serif;
 
   /* ── Border radius ──────────────────────────────── */
   --radius-4xl: 2rem;
@@ -71,7 +70,7 @@
   }
 
   body {
-    font-family: 'Inter', system-ui, sans-serif;
+    font-family: var(--font-family-sans);
     background-color: #030712;
     color: #f9fafb;
     overflow-x: hidden;
