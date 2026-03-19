@@ -11,8 +11,9 @@ import { useToast } from '@/components/ui/use-toast';
 import { GlassButton } from '@/components/shared/GlassButton';
 import { GlassInput } from '@/components/shared/GlassInput';
 import { useAuthStore } from '@/store/auth.store';
-import api from '@/lib/api';
-import { ApiResponse, AuthResponse } from '@/types';
+
+// ── Service layer import — no direct api calls in components ──
+import { registerUser } from '@/services/auth.service';
 
 // ── Zod validation schema ─────────────────────────────
 const registerSchema = z
@@ -45,6 +46,7 @@ type RegisterFormData = z.infer<typeof registerSchema>;
 export function RegisterForm() {
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
     const router = useRouter();
     const setAuth = useAuthStore((state) => state.setAuth);
     const { toast } = useToast();
@@ -59,31 +61,33 @@ export function RegisterForm() {
 
     async function onSubmit(data: RegisterFormData) {
         try {
-            const response = await api.post<ApiResponse<AuthResponse>>(
-                '/auth/register',
-                {
-                    firstName: data.firstName,
-                    lastName: data.lastName,
-                    email: data.email,
-                    password: data.password,
-                },
-            );
+            // Call the service — not api.post() directly
+            const { user, token } = await registerUser({
+                firstName: data.firstName,
+                lastName: data.lastName,
+                email: data.email,
+                password: data.password,
+            });
 
-            const { user, token } = response.data.data!;
-
-            // Store user and token in zustand — also sets localStorage
+            // Store credentials globally
             setAuth(user, token);
 
             toast({
                 title: 'Account created!',
-                description: `Welcome, ${user.firstName}. Let's verify your first identity.`,
+                description: `Welcome, ${user.firstName}.`,
             });
 
             router.push('/dashboard');
+
         } catch (error: unknown) {
+            // Extract the error message from the NestJS response shape
             const message =
-                (error as { response?: { data?: { error?: { message?: string } } } })
-                    ?.response?.data?.error?.message ?? 'Registration failed. Please try again.';
+                (
+                    error as {
+                        response?: { data?: { error?: { message?: string } } };
+                    }
+                )?.response?.data?.error?.message ??
+                'Registration failed. Please try again.';
 
             toast({
                 title: 'Registration failed',
@@ -138,7 +142,9 @@ export function RegisterForm() {
                 iconRight={
                     showConfirmPassword ? <EyeOff size={16} /> : <Eye size={16} />
                 }
-                onIconRightClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                onIconRightClick={() =>
+                    setShowConfirmPassword(!showConfirmPassword)
+                }
                 {...register('confirmPassword')}
             />
 
@@ -153,7 +159,6 @@ export function RegisterForm() {
                 Create account
             </GlassButton>
 
-            {/* Password strength hint */}
             <motion.p
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
