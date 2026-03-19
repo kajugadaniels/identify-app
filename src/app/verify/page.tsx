@@ -1,5 +1,3 @@
-// src/app/verify/page.tsx
-
 'use client';
 
 import { useState } from 'react';
@@ -11,8 +9,13 @@ import { StepIndicator } from '@/components/shared/StepIndicator';
 import { IDUploader } from '@/components/verification/IDUploader';
 import { VerificationResult } from '@/components/verification/VerificationResult';
 import { useToast } from '@/components/ui/use-toast';
-import api from '@/lib/api';
-import { ApiResponse, VerificationResult as VerificationResultType } from '@/types';
+import { VerificationResult as VerificationResultType } from '@/types';
+
+// ── Service layer imports ──────────────────────────────
+import {
+    createLivenessSession,
+    submitVerification,
+} from '@/services/verification.service';
 
 // ── Step definitions ──────────────────────────────────
 const STEPS = [
@@ -29,13 +32,12 @@ export default function VerifyPage() {
     const [currentStep, setCurrentStep] = useState(0);
     const [idFile, setIdFile] = useState<File | null>(null);
     const [selfieFile, setSelfieFile] = useState<File | null>(null);
-    const [sessionId, setSessionId] = useState<string | null>(null);
     const [result, setResult] = useState<VerificationResultType | null>(null);
     const [processing, setProcessing] = useState(false);
 
     if (!isAuthenticated) return null;
 
-    // ── Step 1 → 2: Upload ID and move to selfie ──────
+    // ── Step 0 → 1: ID uploaded, proceed to selfie ────
     function handleIdSelected(file: File) {
         setIdFile(file);
     }
@@ -52,14 +54,14 @@ export default function VerifyPage() {
         setCurrentStep(1);
     }
 
-    // ── Step 2: Capture selfie ─────────────────────────
+    // ── Step 1: Selfie selected ────────────────────────
     function handleSelfieSelected(file: File) {
         setSelfieFile(file);
     }
 
-    // ── Step 2 → 3: Create liveness session ───────────
+    // ── Step 1 → 2 → 3: Run verification ──────────────
     async function handleStartVerification() {
-        if (!selfieFile) {
+        if (!selfieFile || !idFile) {
             toast({
                 title: 'Selfie required',
                 description: 'Please upload a selfie before continuing.',
@@ -72,49 +74,43 @@ export default function VerifyPage() {
         setCurrentStep(2);
 
         try {
-            // Create the liveness session on NestJS → AWS
-            const sessionResponse = await api.post<ApiResponse<{ sessionId: string }>>(
-                '/verify/session',
-            );
-            const sid = sessionResponse.data.data!.sessionId;
-            setSessionId(sid);
+            // Step 1 — create liveness session on AWS via NestJS
+            const sessionId = await createLivenessSession();
 
-            // Submit verification with both images + session ID
-            const formData = new FormData();
-            formData.append('livenessSessionId', sid);
-            formData.append('idImage', idFile!);
-            formData.append('selfieImage', selfieFile);
-
-            const verifyResponse = await api.post<ApiResponse<VerificationResultType>>(
-                '/verify',
-                formData,
-                { headers: { 'Content-Type': 'multipart/form-data' } },
+            // Step 2 — submit both images + session ID for full verification
+            const verificationResult = await submitVerification(
+                sessionId,
+                idFile,
+                selfieFile,
             );
 
-            setResult(verifyResponse.data.data!);
+            setResult(verificationResult);
             setCurrentStep(3);
+
         } catch (error: unknown) {
             const message =
                 (error as { response?: { data?: { message?: string } } })
-                    ?.response?.data?.message ?? 'Verification failed. Please try again.';
+                    ?.response?.data?.message ??
+                'Verification failed. Please try again.';
 
             toast({
                 title: 'Verification failed',
                 description: message,
                 variant: 'destructive',
             });
+
+            // Go back to selfie step so user can retry
             setCurrentStep(1);
         } finally {
             setProcessing(false);
         }
     }
 
-    // ── Reset everything for a retry ──────────────────
+    // ── Reset all state for a fresh attempt ───────────
     function handleRetry() {
         setCurrentStep(0);
         setIdFile(null);
         setSelfieFile(null);
-        setSessionId(null);
         setResult(null);
         setProcessing(false);
     }
@@ -137,12 +133,12 @@ export default function VerifyPage() {
                 </p>
             </motion.div>
 
-            {/* Step indicator */}
+            {/* Step progress indicator */}
             <div className="mb-8">
                 <StepIndicator steps={STEPS} currentStep={currentStep} />
             </div>
 
-            {/* Step content */}
+            {/* Step content card */}
             <GlassCard variant="lg" className="p-6 sm:p-8">
                 <AnimatePresence mode="wait">
 
@@ -167,7 +163,7 @@ export default function VerifyPage() {
 
                             <IDUploader
                                 label="ID card image"
-                                hint="Passport, driver's licence or national ID — JPEG or PNG, max 5MB"
+                                hint="Passport, driver's licence or national ID · JPEG or PNG · max 5MB"
                                 onFileSelected={handleIdSelected}
                             />
 
@@ -204,7 +200,7 @@ export default function VerifyPage() {
 
                             <IDUploader
                                 label="Selfie image"
-                                hint="Face must be clearly visible — no sunglasses or hats"
+                                hint="Face must be clearly visible · no sunglasses or hats"
                                 onFileSelected={handleSelfieSelected}
                             />
 
@@ -240,11 +236,11 @@ export default function VerifyPage() {
                             transition={{ duration: 0.3 }}
                             className="flex flex-col items-center gap-6 py-8"
                         >
-                            {/* Animated spinner */}
+                            {/* Spinning ring */}
                             <div className="relative w-20 h-20">
-                                <motion.div
-                                    className="absolute inset-0 rounded-full border-2
-                             border-indigo-500/20"
+                                <div
+                                    className="absolute inset-0 rounded-full border-2"
+                                    style={{ borderColor: 'rgba(99,102,241,0.2)' }}
                                 />
                                 <motion.div
                                     className="absolute inset-0 rounded-full border-2
@@ -253,8 +249,7 @@ export default function VerifyPage() {
                                     animate={{ rotate: 360 }}
                                     transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
                                 />
-                                <div className="absolute inset-0 flex items-center
-                               justify-center text-2xl">
+                                <div className="absolute inset-0 flex items-center justify-center text-2xl">
                                     🔍
                                 </div>
                             </div>
@@ -268,7 +263,7 @@ export default function VerifyPage() {
                                 </p>
                             </div>
 
-                            {/* Animated progress steps */}
+                            {/* Animated step labels */}
                             <div className="flex flex-col gap-2 w-full max-w-xs">
                                 {[
                                     'Creating liveness session',
@@ -290,7 +285,8 @@ export default function VerifyPage() {
                                                 duration: 1.2,
                                                 repeat: Infinity,
                                             }}
-                                            className="w-1.5 h-1.5 rounded-full bg-indigo-400"
+                                            className="w-1.5 h-1.5 rounded-full"
+                                            style={{ background: '#6366f1' }}
                                         />
                                         {step}
                                     </motion.div>
