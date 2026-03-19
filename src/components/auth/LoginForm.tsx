@@ -10,8 +10,9 @@ import { useToast } from '@/components/ui/use-toast';
 import { GlassButton } from '@/components/shared/GlassButton';
 import { GlassInput } from '@/components/shared/GlassInput';
 import { useAuthStore } from '@/store/auth.store';
-import api from '@/lib/api';
-import { ApiResponse, AuthResponse } from '@/types';
+
+// ── Service layer import ───────────────────────────────
+import { loginUser } from '@/services/auth.service';
 
 // ── Zod schema ────────────────────────────────────────
 const loginSchema = z.object({
@@ -37,12 +38,8 @@ export function LoginForm() {
 
     async function onSubmit(data: LoginFormData) {
         try {
-            const response = await api.post<ApiResponse<AuthResponse>>(
-                '/auth/login',
-                data,
-            );
+            const { user, token } = await loginUser(data);
 
-            const { user, token } = response.data.data!;
             setAuth(user, token);
 
             toast({
@@ -51,10 +48,15 @@ export function LoginForm() {
             });
 
             router.push('/dashboard');
+
         } catch (error: unknown) {
             const message =
-                (error as { response?: { data?: { error?: { message?: string } } } })
-                    ?.response?.data?.error?.message ?? 'Invalid email or password.';
+                (
+                    error as {
+                        response?: { data?: { error?: { message?: string } } };
+                    }
+                )?.response?.data?.error?.message ??
+                'Invalid email or password.';
 
             toast({
                 title: 'Login failed',
