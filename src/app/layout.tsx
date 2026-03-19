@@ -19,7 +19,7 @@ export default function RootLayout({
 }) {
     return (
         <html lang="en">
-            <body className={`${inter.className} min-h-screen antialiased`}>
+            <body className={`${inter.className} min-h-screen antialiased`} suppressHydrationWarning>
                 <AnimatedBackground />
                 <div className="relative" style={{ zIndex: 10 }}>
                     <Navbar />
