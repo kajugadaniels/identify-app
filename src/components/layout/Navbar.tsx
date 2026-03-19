@@ -39,8 +39,7 @@ export function Navbar() {
                     {/* ── Logo ──────────────────────────────────── */}
                     <Link href="/" className="flex items-center gap-2 select-none">
                         <div
-                            className="w-8 h-8 rounded-lg flex items-center justify-center
-                         text-white text-sm font-bold"
+                            className="w-8 h-8 rounded-lg flex items-center justify-center text-white text-sm font-bold"
                             style={{
                                 background: 'linear-gradient(135deg, #6366f1, #7c3aed)',
                                 boxShadow: '0 4px 14px rgba(99,102,241,0.4)',
@@ -112,8 +111,7 @@ export function Navbar() {
 
                     {/* ── Mobile hamburger ──────────────────────── */}
                     <button
-                        className="md:hidden flex flex-col gap-1.5 p-2 rounded-lg
-                       hover:bg-white/[0.06] transition-colors"
+                        className="md:hidden flex flex-col gap-1.5 p-2 rounded-lg hover:bg-white/[0.06] transition-colors"
                         onClick={() => setMobileOpen(!mobileOpen)}
                         aria-label="Toggle menu"
                     >
