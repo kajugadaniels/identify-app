@@ -10,11 +10,11 @@ import { ProfileCard } from '@/components/dashboard/ProfileCard';
 import { VerificationHistory } from '@/components/dashboard/VerificationHistory';
 
 export default function DashboardPage() {
-    const { user, isAuthenticated } = useRequireAuth();
+    const { user, isAuthenticated, isLoading } = useRequireAuth();
     const router = useRouter();
 
     // Prevent rendering protected content before redirect fires
-    if (!isAuthenticated) return null;
+    if (isLoading || !isAuthenticated) return null;
 
     return (
         <div className="max-w-4xl mx-auto px-4 sm:px-6 py-10">

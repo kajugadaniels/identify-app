@@ -43,7 +43,7 @@ function dataUrlToFile(dataUrl: string, filename: string): File {
 }
 
 export default function VerifyPage() {
-    const { isAuthenticated } = useRequireAuth();
+    const { isAuthenticated, isLoading } = useRequireAuth();
     const { toast } = useToast();
 
     // ── Step state ─────────────────────────────────────
@@ -58,7 +58,7 @@ export default function VerifyPage() {
     const [result, setResult] = useState<VerificationResultType | null>(null);
     const [processing, setProcessing] = useState(false);
 
-    if (!isAuthenticated) return null;
+    if (isLoading || !isAuthenticated) return null;
 
     // ── ID card captured from camera ──────────────────
     function handleIdCaptured(dataUrl: string) {
