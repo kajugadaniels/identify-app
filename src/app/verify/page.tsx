@@ -1,17 +1,16 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRequireAuth } from '@/hooks/useRequireAuth';
 import { GlassCard } from '@/components/shared/GlassCard';
 import { GlassButton } from '@/components/shared/GlassButton';
 import { StepIndicator } from '@/components/shared/StepIndicator';
-import { IDUploader } from '@/components/verification/IDUploader';
+import { CameraCapture } from '@/components/verification/CameraCapture';
+import { CapturePreview } from '@/components/verification/CapturePreview';
 import { VerificationResult } from '@/components/verification/VerificationResult';
 import { useToast } from '@/components/ui/use-toast';
 import { VerificationResult as VerificationResultType } from '@/types';
-
-// ── Service layer imports ──────────────────────────────
 import {
     createLivenessSession,
     submitVerification,
@@ -19,65 +18,86 @@ import {
 
 // ── Step definitions ──────────────────────────────────
 const STEPS = [
-    { label: 'Upload ID' },
+    { label: 'ID card' },
     { label: 'Selfie' },
     { label: 'Processing' },
     { label: 'Result' },
 ];
 
+// ── Sub-step within each capture step ────────────────
+// 'camera'  = live camera feed with guide overlay
+// 'preview' = captured frame shown for review
+type SubStep = 'camera' | 'preview';
+
+// ── Helper: convert base64 data URL to File object ───
+// NestJS expects a real File in the FormData — not a base64 string
+function dataUrlToFile(dataUrl: string, filename: string): File {
+    const [header, base64] = dataUrl.split(',');
+    const mime = header.match(/:(.*?);/)?.[1] ?? 'image/jpeg';
+    const binary = atob(base64);
+    const bytes = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) {
+        bytes[i] = binary.charCodeAt(i);
+    }
+    return new File([bytes], filename, { type: mime });
+}
+
 export default function VerifyPage() {
     const { isAuthenticated } = useRequireAuth();
     const { toast } = useToast();
 
+    // ── Step state ─────────────────────────────────────
     const [currentStep, setCurrentStep] = useState(0);
-    const [idFile, setIdFile] = useState<File | null>(null);
-    const [selfieFile, setSelfieFile] = useState<File | null>(null);
+    const [subStep, setSubStep] = useState<SubStep>('camera');
+
+    // ── Captured image state ───────────────────────────
+    const [idDataUrl, setIdDataUrl] = useState<string | null>(null);
+    const [selfieDataUrl, setSelfieDataUrl] = useState<string | null>(null);
+
+    // ── Result state ───────────────────────────────────
     const [result, setResult] = useState<VerificationResultType | null>(null);
     const [processing, setProcessing] = useState(false);
 
     if (!isAuthenticated) return null;
 
-    // ── Step 0 → 1: ID uploaded, proceed to selfie ────
-    function handleIdSelected(file: File) {
-        setIdFile(file);
+    // ── ID card captured from camera ──────────────────
+    function handleIdCaptured(dataUrl: string) {
+        setIdDataUrl(dataUrl);
+        setSubStep('preview');
     }
 
-    function handleProceedToSelfie() {
-        if (!idFile) {
-            toast({
-                title: 'ID image required',
-                description: 'Please upload your ID card before continuing.',
-                variant: 'destructive',
-            });
-            return;
-        }
+    // ── User confirms ID preview ───────────────────────
+    function handleIdConfirmed() {
         setCurrentStep(1);
+        setSubStep('camera');
     }
 
-    // ── Step 1: Selfie selected ────────────────────────
-    function handleSelfieSelected(file: File) {
-        setSelfieFile(file);
+    // ── User retakes ID ────────────────────────────────
+    function handleIdRetake() {
+        setIdDataUrl(null);
+        setSubStep('camera');
     }
 
-    // ── Step 1 → 2 → 3: Run verification ──────────────
-    async function handleStartVerification() {
-        if (!selfieFile || !idFile) {
-            toast({
-                title: 'Selfie required',
-                description: 'Please upload a selfie before continuing.',
-                variant: 'destructive',
-            });
-            return;
-        }
+    // ── Selfie captured from camera ────────────────────
+    function handleSelfieCaptured(dataUrl: string) {
+        setSelfieDataUrl(dataUrl);
+        setSubStep('preview');
+    }
 
-        setProcessing(true);
+    // ── User confirms selfie — run verification ────────
+    async function handleSelfieConfirmed() {
+        if (!idDataUrl || !selfieDataUrl) return;
+
         setCurrentStep(2);
+        setProcessing(true);
 
         try {
-            // Step 1 — create liveness session on AWS via NestJS
-            const sessionId = await createLivenessSession();
+            // Convert base64 data URLs to File objects for FormData
+            const idFile = dataUrlToFile(idDataUrl, 'id_card.jpg');
+            const selfieFile = dataUrlToFile(selfieDataUrl, 'selfie.jpg');
 
-            // Step 2 — submit both images + session ID for full verification
+            // Create liveness session then submit both images
+            const sessionId = await createLivenessSession();
             const verificationResult = await submitVerification(
                 sessionId,
                 idFile,
@@ -99,18 +119,37 @@ export default function VerifyPage() {
                 variant: 'destructive',
             });
 
-            // Go back to selfie step so user can retry
+            // Send back to selfie step to retry
             setCurrentStep(1);
+            setSubStep('camera');
+            setSelfieDataUrl(null);
+
         } finally {
             setProcessing(false);
         }
     }
 
-    // ── Reset all state for a fresh attempt ───────────
+    // ── User retakes selfie ────────────────────────────
+    function handleSelfieRetake() {
+        setSelfieDataUrl(null);
+        setSubStep('camera');
+    }
+
+    // ── Camera error ───────────────────────────────────
+    function handleCameraError(message: string) {
+        toast({
+            title: 'Camera error',
+            description: message,
+            variant: 'destructive',
+        });
+    }
+
+    // ── Reset everything ───────────────────────────────
     function handleRetry() {
         setCurrentStep(0);
-        setIdFile(null);
-        setSelfieFile(null);
+        setSubStep('camera');
+        setIdDataUrl(null);
+        setSelfieDataUrl(null);
         setResult(null);
         setProcessing(false);
     }
@@ -133,103 +172,102 @@ export default function VerifyPage() {
                 </p>
             </motion.div>
 
-            {/* Step progress indicator */}
+            {/* Step indicator */}
             <div className="mb-8">
                 <StepIndicator steps={STEPS} currentStep={currentStep} />
             </div>
 
-            {/* Step content card */}
+            {/* Step content */}
             <GlassCard variant="lg" className="p-6 sm:p-8">
                 <AnimatePresence mode="wait">
 
-                    {/* ── Step 0: Upload ID card ─────────────── */}
-                    {currentStep === 0 && (
+                    {/* ── Step 0: ID card capture ────────────── */}
+                    {currentStep === 0 && subStep === 'camera' && (
                         <motion.div
-                            key="step-0"
+                            key="id-camera"
                             initial={{ opacity: 0, x: 20 }}
                             animate={{ opacity: 1, x: 0 }}
                             exit={{ opacity: 0, x: -20 }}
                             transition={{ duration: 0.3 }}
-                            className="flex flex-col gap-6"
                         >
-                            <div>
-                                <h2 className="text-lg font-semibold text-white mb-1">
-                                    Upload your ID card
-                                </h2>
-                                <p className="text-sm text-white/40">
-                                    Upload a clear photo of a government-issued ID
-                                </p>
-                            </div>
-
-                            <IDUploader
-                                label="ID card image"
-                                hint="Passport, driver's licence or national ID · JPEG or PNG · max 5MB"
-                                onFileSelected={handleIdSelected}
+                            <CameraCapture
+                                mode="id"
+                                onCapture={handleIdCaptured}
+                                onError={handleCameraError}
                             />
-
-                            <GlassButton
-                                variant="primary"
-                                size="lg"
-                                fullWidth
-                                onClick={handleProceedToSelfie}
-                                disabled={!idFile}
-                            >
-                                Continue
-                            </GlassButton>
                         </motion.div>
                     )}
 
-                    {/* ── Step 1: Upload selfie ──────────────── */}
-                    {currentStep === 1 && (
+                    {currentStep === 0 && subStep === 'preview' && idDataUrl && (
                         <motion.div
-                            key="step-1"
+                            key="id-preview"
                             initial={{ opacity: 0, x: 20 }}
                             animate={{ opacity: 1, x: 0 }}
                             exit={{ opacity: 0, x: -20 }}
                             transition={{ duration: 0.3 }}
-                            className="flex flex-col gap-6"
                         >
-                            <div>
-                                <h2 className="text-lg font-semibold text-white mb-1">
-                                    Take a selfie
-                                </h2>
-                                <p className="text-sm text-white/40">
-                                    Upload a clear, well-lit photo of your face
-                                </p>
-                            </div>
+                            <CapturePreview
+                                dataUrl={idDataUrl}
+                                mode="id"
+                                onConfirm={handleIdConfirmed}
+                                onRetake={handleIdRetake}
+                            />
+                        </motion.div>
+                    )}
 
-                            <IDUploader
-                                label="Selfie image"
-                                hint="Face must be clearly visible · no sunglasses or hats"
-                                onFileSelected={handleSelfieSelected}
+                    {/* ── Step 1: Selfie capture ─────────────── */}
+                    {currentStep === 1 && subStep === 'camera' && (
+                        <motion.div
+                            key="selfie-camera"
+                            initial={{ opacity: 0, x: 20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            exit={{ opacity: 0, x: -20 }}
+                            transition={{ duration: 0.3 }}
+                        >
+                            <CameraCapture
+                                mode="selfie"
+                                onCapture={handleSelfieCaptured}
+                                onError={handleCameraError}
                             />
 
-                            <div className="flex gap-3">
+                            {/* Back button */}
+                            <div className="mt-4">
                                 <GlassButton
                                     variant="ghost"
-                                    size="lg"
-                                    onClick={() => setCurrentStep(0)}
+                                    size="sm"
+                                    onClick={() => {
+                                        setCurrentStep(0);
+                                        setSubStep('camera');
+                                        setIdDataUrl(null);
+                                    }}
                                 >
-                                    Back
-                                </GlassButton>
-                                <GlassButton
-                                    variant="primary"
-                                    size="lg"
-                                    fullWidth
-                                    onClick={handleStartVerification}
-                                    disabled={!selfieFile}
-                                    loading={processing}
-                                >
-                                    Verify now
+                                    ← Retake ID card
                                 </GlassButton>
                             </div>
+                        </motion.div>
+                    )}
+
+                    {currentStep === 1 && subStep === 'preview' && selfieDataUrl && (
+                        <motion.div
+                            key="selfie-preview"
+                            initial={{ opacity: 0, x: 20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            exit={{ opacity: 0, x: -20 }}
+                            transition={{ duration: 0.3 }}
+                        >
+                            <CapturePreview
+                                dataUrl={selfieDataUrl}
+                                mode="selfie"
+                                onConfirm={handleSelfieConfirmed}
+                                onRetake={handleSelfieRetake}
+                            />
                         </motion.div>
                     )}
 
                     {/* ── Step 2: Processing ─────────────────── */}
                     {currentStep === 2 && (
                         <motion.div
-                            key="step-2"
+                            key="processing"
                             initial={{ opacity: 0, scale: 0.96 }}
                             animate={{ opacity: 1, scale: 1 }}
                             exit={{ opacity: 0, scale: 0.96 }}
@@ -249,7 +287,8 @@ export default function VerifyPage() {
                                     animate={{ rotate: 360 }}
                                     transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
                                 />
-                                <div className="absolute inset-0 flex items-center justify-center text-2xl">
+                                <div className="absolute inset-0 flex items-center
+                               justify-center text-2xl">
                                     🔍
                                 </div>
                             </div>
@@ -298,7 +337,7 @@ export default function VerifyPage() {
                     {/* ── Step 3: Result ─────────────────────── */}
                     {currentStep === 3 && result && (
                         <motion.div
-                            key="step-3"
+                            key="result"
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             transition={{ duration: 0.4 }}
@@ -309,6 +348,45 @@ export default function VerifyPage() {
 
                 </AnimatePresence>
             </GlassCard>
+
+            {/* Tips card — only shown during capture steps */}
+            <AnimatePresence>
+                {currentStep < 2 && (
+                    <motion.div
+                        initial={{ opacity: 0, y: 12 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ delay: 0.3 }}
+                        className="mt-4"
+                    >
+                        <GlassCard variant="sm" className="p-4">
+                            <p className="text-xs text-white/40 uppercase tracking-widest mb-3">
+                                Tips for best results
+                            </p>
+                            <div className="grid grid-cols-2 gap-2">
+                                {(currentStep === 0
+                                    ? [
+                                        '💡 Use good lighting',
+                                        '📐 Keep card flat',
+                                        '🔍 Fill the frame',
+                                        '🚫 No glare or shadows',
+                                    ]
+                                    : [
+                                        '👁️ Look at the camera',
+                                        '💡 Good lighting',
+                                        '😐 Neutral expression',
+                                        '🚫 No glasses or hats',
+                                    ]
+                                ).map((tip) => (
+                                    <p key={tip} className="text-xs text-white/45">
+                                        {tip}
+                                    </p>
+                                ))}
+                            </div>
+                        </GlassCard>
+                    </motion.div>
+                )}
+            </AnimatePresence>
 
         </div>
     );
