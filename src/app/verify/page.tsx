@@ -11,10 +11,7 @@ import { CapturePreview } from '@/components/verification/CapturePreview';
 import { VerificationResult } from '@/components/verification/VerificationResult';
 import { useToast } from '@/components/ui/use-toast';
 import { VerificationResult as VerificationResultType } from '@/types';
-import {
-    createLivenessSession,
-    submitVerification,
-} from '@/services/verification.service';
+import { submitVerification } from '@/services/verification.service';
 
 // ── Step definitions ──────────────────────────────────
 const STEPS = [
@@ -96,10 +93,8 @@ export default function VerifyPage() {
             const idFile = dataUrlToFile(idDataUrl, 'id_card.jpg');
             const selfieFile = dataUrlToFile(selfieDataUrl, 'selfie.jpg');
 
-            // Create liveness session then submit both images
-            const sessionId = await createLivenessSession();
+            // Submit both images — liveness session is handled server-side
             const verificationResult = await submitVerification(
-                sessionId,
                 idFile,
                 selfieFile,
             );
@@ -108,9 +103,13 @@ export default function VerifyPage() {
             setCurrentStep(3);
 
         } catch (error: unknown) {
+            // HttpExceptionFilter nests the message at data.error.message.
+            // Fall back through multiple paths to always show something useful.
+            type ErrData = { error?: { message?: string }; message?: string };
+            const data = (error as { response?: { data?: ErrData } })?.response?.data;
             const message =
-                (error as { response?: { data?: { message?: string } } })
-                    ?.response?.data?.message ??
+                data?.error?.message ??
+                data?.message ??
                 'Verification failed. Please try again.';
 
             toast({
