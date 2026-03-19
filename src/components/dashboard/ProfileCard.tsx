@@ -9,10 +9,10 @@ import { useToast } from '@/components/ui/use-toast';
 import { GlassButton } from '@/components/shared/GlassButton';
 import { GlassInput } from '@/components/shared/GlassInput';
 import { GlassCard } from '@/components/shared/GlassCard';
-import { useAuthStore } from '@/store/auth.store';
 
 // ── Service layer import ───────────────────────────────
 import { updateProfile } from '@/services/user.service';
+import { useAuthStore } from '@/store/auth.store';
 
 const profileSchema = z.object({
     firstName: z.string().min(2, 'At least 2 characters').max(50),

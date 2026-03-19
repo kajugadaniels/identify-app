@@ -10,10 +10,10 @@ import { Eye, EyeOff } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 import { GlassButton } from '@/components/shared/GlassButton';
 import { GlassInput } from '@/components/shared/GlassInput';
-import { useAuthStore } from '@/store/auth.store';
 
 // ── Service layer import — no direct api calls in components ──
 import { registerUser } from '@/services/auth.service';
+import { useAuthStore } from '@/store/auth.store';
 
 // ── Zod validation schema ─────────────────────────────
 const registerSchema = z
