@@ -8,7 +8,10 @@ type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger';
 type ButtonSize = 'sm' | 'md' | 'lg';
 
 interface GlassButtonProps
-    extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+    extends Omit<
+        React.ButtonHTMLAttributes<HTMLButtonElement>,
+        'onAnimationStart' | 'onDrag' | 'onDragStart' | 'onDragEnd'
+    > {
     variant?: ButtonVariant;
     size?: ButtonSize;
     loading?: boolean;
@@ -87,7 +90,7 @@ export function GlassButton({
                 className,
             )}
             disabled={isDisabled}
-            {...(props as React.ButtonHTMLAttributes<HTMLButtonElement>)}
+            {...props}
         >
             {/* Loading spinner replaces left icon */}
             {loading ? (
