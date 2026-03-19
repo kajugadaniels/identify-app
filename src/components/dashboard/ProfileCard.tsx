@@ -10,12 +10,13 @@ import { GlassButton } from '@/components/shared/GlassButton';
 import { GlassInput } from '@/components/shared/GlassInput';
 import { GlassCard } from '@/components/shared/GlassCard';
 import { useAuthStore } from '@/store/auth.store';
-import api from '@/lib/api';
-import { ApiResponse, User } from '@/types';
+
+// ── Service layer import ───────────────────────────────
+import { updateProfile } from '@/services/user.service';
 
 const profileSchema = z.object({
-    firstName: z.string().min(2).max(50),
-    lastName: z.string().min(2).max(50),
+    firstName: z.string().min(2, 'At least 2 characters').max(50),
+    lastName: z.string().min(2, 'At least 2 characters').max(50),
 });
 
 type ProfileFormData = z.infer<typeof profileSchema>;
@@ -40,13 +41,15 @@ export function ProfileCard() {
 
     async function onSubmit(data: ProfileFormData) {
         try {
-            const response = await api.patch<ApiResponse<User>>(
-                '/users/profile',
-                data,
-            );
-            updateUser(response.data.data!);
+            // Call service — returns updated user
+            const updatedUser = await updateProfile(data);
+
+            // Sync zustand store with the new user data
+            updateUser(updatedUser);
             setEditing(false);
+
             toast({ title: 'Profile updated successfully' });
+
         } catch {
             toast({
                 title: 'Update failed',
@@ -57,20 +60,24 @@ export function ProfileCard() {
     }
 
     function handleCancel() {
-        reset();
+        // Reset form back to current user values and exit edit mode
+        reset({
+            firstName: user?.firstName ?? '',
+            lastName: user?.lastName ?? '',
+        });
         setEditing(false);
     }
 
     return (
         <GlassCard variant="md" className="p-6">
 
-            {/* Header row */}
+            {/* Header row — avatar + name + email */}
             <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center gap-4">
-                    {/* Avatar */}
+                    {/* Avatar circle with gradient and first initial */}
                     <div
                         className="w-12 h-12 rounded-full flex items-center justify-center
-                       text-white font-bold text-lg"
+                       text-white font-bold text-lg shrink-0"
                         style={{
                             background: 'linear-gradient(135deg, #6366f1, #a78bfa)',
                             boxShadow: '0 0 16px rgba(99,102,241,0.4)',
@@ -78,6 +85,7 @@ export function ProfileCard() {
                     >
                         {user?.firstName?.[0]?.toUpperCase()}
                     </div>
+
                     <div>
                         <p className="text-white font-semibold">
                             {user?.firstName} {user?.lastName}
@@ -86,7 +94,7 @@ export function ProfileCard() {
                     </div>
                 </div>
 
-                {/* Edit toggle */}
+                {/* Edit button — only visible when not editing */}
                 {!editing && (
                     <GlassButton
                         variant="ghost"
@@ -98,11 +106,12 @@ export function ProfileCard() {
                 )}
             </div>
 
-            {/* Edit form — shown only when editing */}
+            {/* Inline edit form */}
             {editing && (
                 <motion.form
                     initial={{ opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.25 }}
                     onSubmit={handleSubmit(onSubmit)}
                     className="flex flex-col gap-4"
                 >
