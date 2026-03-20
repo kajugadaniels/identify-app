@@ -32,6 +32,7 @@ interface InlineFieldProps {
 
 function InlineField({ label, error, icon, registration }: InlineFieldProps) {
     const [isFocused, setIsFocused] = useState(false);
+    const { ref: inputRef, name: inputName, onChange: inputOnChange, onBlur: inputOnBlur } = registration;
 
     return (
         <div className="flex flex-col gap-1.5">
@@ -105,11 +106,11 @@ function InlineField({ label, error, icon, registration }: InlineFieldProps) {
                             onFocus={() => setIsFocused(true)}
                             onBlur={(e) => {
                                 setIsFocused(false);
-                                registration.onBlur(e);
+                                inputOnBlur(e);
                             }}
-                            onChange={registration.onChange}
-                            ref={registration.ref}
-                            name={registration.name}
+                            onChange={inputOnChange}
+                            ref={inputRef}
+                            name={inputName}
                         />
                     </div>
                 </div>
