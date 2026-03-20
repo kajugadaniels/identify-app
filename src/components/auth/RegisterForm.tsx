@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useRouter } from 'next/navigation';
-import { motion } from 'framer-motion';
+import { motion, Variants } from 'framer-motion';
 import {
     Eye,
     EyeOff,
@@ -56,14 +56,14 @@ interface RegisterFormProps {
 }
 
 /* ── Stagger animation variants ─────────────────────────── */
-const containerVariants = {
+const containerVariants: Variants = {
     hidden: {},
     visible: {
         transition: { staggerChildren: 0.07, delayChildren: 0.03 },
     },
 };
 
-const itemVariants = {
+const itemVariants: Variants = {
     hidden: { opacity: 0, y: 12 },
     visible: {
         opacity: 1,
@@ -97,6 +97,7 @@ function GlassField({
 }: GlassFieldProps) {
     const [isFocused, setIsFocused] = useState(false);
     const [hasValue, setHasValue] = useState(false);
+    const { ref: inputRef, name: inputName } = registration;
 
     return (
         <div className="flex flex-col gap-1.5">
@@ -198,8 +199,8 @@ function GlassField({
                                 setHasValue(e.target.value.length > 0);
                                 registration.onChange(e);
                             }}
-                            ref={registration.ref}
-                            name={registration.name}
+                            ref={inputRef}
+                            name={inputName}
                         />
 
                         {/* Right icon */}
