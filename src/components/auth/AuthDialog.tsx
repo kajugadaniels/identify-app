@@ -1,20 +1,20 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, Variants } from 'framer-motion';
 import { X } from 'lucide-react';
 import { useUiStore } from '@/store/ui.store';
 import { LoginForm } from './LoginForm';
 import { RegisterForm } from './RegisterForm';
 
 /* ── Backdrop animation ─────────────────────────────────── */
-const overlayVariants = {
+const overlayVariants: Variants = {
     hidden: { opacity: 0 },
     visible: { opacity: 1 },
 };
 
 /* ── Panel entrance — dramatic spring with overshoot ────── */
-const panelVariants = {
+const panelVariants: Variants = {
     hidden: { opacity: 0, scale: 0.88, y: 40, rotateX: 8 },
     visible: {
         opacity: 1,
@@ -35,12 +35,12 @@ const panelVariants = {
         scale: 0.92,
         y: 24,
         rotateX: 4,
-        transition: { duration: 0.22, ease: [0.4, 0, 1, 1] },
+        transition: { duration: 0.22, ease: [0.4, 0, 1, 1] as [number, number, number, number] },
     },
 };
 
 /* ── Staggered children ─────────────────────────────────── */
-const childVariants = {
+const childVariants: Variants = {
     hidden: { opacity: 0, y: 14 },
     visible: {
         opacity: 1,
