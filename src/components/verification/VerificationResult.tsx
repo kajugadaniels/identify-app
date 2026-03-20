@@ -1,6 +1,6 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion, Variants } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import { GlassCard } from '@/components/shared/GlassCard';
 import { GlassButton } from '@/components/shared/GlassButton';
@@ -23,14 +23,14 @@ interface Props {
 }
 
 /* ── Stagger variants ───────────────────────────────────── */
-const containerVariants = {
+const containerVariants: Variants = {
     hidden: {},
     visible: {
         transition: { staggerChildren: 0.1, delayChildren: 0.15 },
     },
 };
 
-const itemVariants = {
+const itemVariants: Variants = {
     hidden: { opacity: 0, y: 16 },
     visible: {
         opacity: 1,
