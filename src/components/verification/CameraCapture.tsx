@@ -261,10 +261,8 @@ export function CameraCapture({
         isReady,
         error,
         quality,
-        capturedImage,
         startCamera,
         capture,
-        reset,
     } = useCamera();
 
     // Start camera once on mount
