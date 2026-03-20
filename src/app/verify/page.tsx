@@ -533,7 +533,7 @@ export default function VerifyPage() {
                                                     Take a selfie
                                                 </h3>
                                                 <p className="text-[11px] text-slate-400">
-                                                    We'll match your face against your ID
+                                                    We&apos;ll match your face against your ID
                                                 </p>
                                             </div>
                                         </div>
