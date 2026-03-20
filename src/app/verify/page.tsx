@@ -270,7 +270,7 @@ export default function VerifyPage() {
     const [idDataUrl, setIdDataUrl] = useState<string | null>(null);
     const [selfieDataUrl, setSelfieDataUrl] = useState<string | null>(null);
     const [result, setResult] = useState<VerificationResultType | null>(null);
-    const [processing, setProcessing] = useState(false);
+    const [, setProcessing] = useState(false);
 
     if (isLoading || !isAuthenticated) return null;
 
