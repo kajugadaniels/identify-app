@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, Variants } from 'framer-motion';
 import { GlassCard } from '@/components/shared/GlassCard';
 import { ScoreBadge } from '@/components/shared/ScoreBadge';
 import { VerificationHistoryItem } from '@/types';
@@ -11,14 +11,14 @@ import { ScanFace, CheckCircle2, XCircle, Search, Clock } from 'lucide-react';
 import { getVerificationHistory } from '@/services/user.service';
 
 /* ── Stagger variants ───────────────────────────────────── */
-const listVariants = {
+const listVariants: Variants = {
     hidden: {},
     visible: {
         transition: { staggerChildren: 0.06, delayChildren: 0.05 },
     },
 };
 
-const rowVariants = {
+const rowVariants: Variants = {
     hidden: { opacity: 0, y: 14, scale: 0.98 },
     visible: {
         opacity: 1,
