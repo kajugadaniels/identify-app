@@ -2,7 +2,6 @@ import type { Metadata } from 'next';
 import { DM_Sans } from 'next/font/google';
 import './globals.css';
 import { Navbar } from '@/components/layout/Navbar';
-import { AnimatedBackground } from '@/components/shared/AnimatedBackground';
 import { AuthDialog } from '@/components/auth/AuthDialog';
 import { Toaster } from '@/components/ui/sonner';
 
@@ -25,7 +24,6 @@ export default function RootLayout({
     return (
         <html lang="en">
             <body className={`${dmSans.variable} min-h-screen antialiased`} suppressHydrationWarning>
-                <AnimatedBackground />
                 <div className="relative" style={{ zIndex: 10 }}>
                     <Navbar />
                     <main>{children}</main>
