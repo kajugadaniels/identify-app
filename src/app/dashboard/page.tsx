@@ -2,7 +2,7 @@
 
 import { useMemo } from 'react';
 import { useRouter } from 'next/navigation';
-import { motion } from 'framer-motion';
+import { motion, Variants } from 'framer-motion';
 import {
     ArrowRight,
     ScanFace,
@@ -16,14 +16,14 @@ import { ProfileCard } from '@/components/dashboard/ProfileCard';
 import { VerificationHistory } from '@/components/dashboard/VerificationHistory';
 
 /* ── Stagger variants ───────────────────────────────────── */
-const containerVariants = {
+const containerVariants: Variants = {
     hidden: {},
     visible: {
         transition: { staggerChildren: 0.08, delayChildren: 0.05 },
     },
 };
 
-const itemVariants = {
+const itemVariants: Variants = {
     hidden: { opacity: 0, y: 18, scale: 0.98 },
     visible: {
         opacity: 1,
