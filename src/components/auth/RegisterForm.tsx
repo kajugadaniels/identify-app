@@ -43,7 +43,11 @@ const registerSchema = z
 
 type RegisterFormData = z.infer<typeof registerSchema>;
 
-export function RegisterForm() {
+interface RegisterFormProps {
+    onSuccess?: () => void;
+}
+
+export function RegisterForm({ onSuccess }: RegisterFormProps) {
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
@@ -77,6 +81,7 @@ export function RegisterForm() {
                 description: `Welcome, ${user.firstName}.`,
             });
 
+            onSuccess?.();
             router.push('/dashboard');
 
         } catch (error: unknown) {

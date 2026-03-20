@@ -1,11 +1,16 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import { DM_Sans } from 'next/font/google';
 import './globals.css';
 import { Navbar } from '@/components/layout/Navbar';
 import { AnimatedBackground } from '@/components/shared/AnimatedBackground';
+import { AuthDialog } from '@/components/auth/AuthDialog';
 import { Toaster } from '@/components/ui/sonner';
 
-const inter = Inter({ subsets: ['latin'], display: 'swap' });
+const dmSans = DM_Sans({
+    subsets: ['latin'],
+    variable: '--font-dm-sans',
+    display: 'swap',
+});
 
 export const metadata: Metadata = {
     title: 'VerifyID — Secure Identity Verification',
@@ -19,12 +24,13 @@ export default function RootLayout({
 }) {
     return (
         <html lang="en">
-            <body className={`${inter.className} min-h-screen antialiased`} suppressHydrationWarning>
+            <body className={`${dmSans.variable} min-h-screen antialiased`} suppressHydrationWarning>
                 <AnimatedBackground />
                 <div className="relative" style={{ zIndex: 10 }}>
                     <Navbar />
                     <main>{children}</main>
                 </div>
+                <AuthDialog />
                 <Toaster />
             </body>
         </html>

@@ -27,11 +27,11 @@ export default function DashboardPage() {
                 className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8"
             >
                 <div>
-                    <h1 className="text-2xl font-bold text-white">
+                    <h1 className="text-2xl font-bold text-slate-900">
                         Welcome back,{' '}
                         <span className="gradient-text">{user?.firstName}</span>
                     </h1>
-                    <p className="text-white/40 text-sm mt-1">
+                    <p className="text-slate-500 text-sm mt-1">
                         Manage your profile and view past verifications
                     </p>
                 </div>
@@ -60,7 +60,7 @@ export default function DashboardPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, delay: 0.2 }}
             >
-                <h2 className="text-lg font-semibold text-white/80 mb-4">
+                <h2 className="text-lg font-semibold text-slate-700 mb-4">
                     Verification history
                 </h2>
                 <VerificationHistory />

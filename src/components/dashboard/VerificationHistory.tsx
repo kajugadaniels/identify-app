@@ -43,10 +43,10 @@ export function VerificationHistory() {
         return (
             <GlassCard variant="sm" className="p-10 text-center">
                 <p className="text-4xl mb-3">🔍</p>
-                <p className="text-white/60 font-medium mb-1">
+                <p className="text-slate-600 font-medium mb-1">
                     No verifications yet
                 </p>
-                <p className="text-white/30 text-sm">
+                <p className="text-slate-400 text-sm">
                     Your verification history will appear here after your first check
                 </p>
             </GlassCard>
@@ -82,8 +82,8 @@ export function VerificationHistory() {
                                     { label: 'OCR', value: item.ocrPassed ? 100 : 0 },
                                 ].map((s) => (
                                     <div key={s.label} className="text-center">
-                                        <p className="text-white/30 text-xs mb-0.5">{s.label}</p>
-                                        <p className="text-white/80 text-sm font-semibold">
+                                        <p className="text-slate-400 text-xs mb-0.5">{s.label}</p>
+                                        <p className="text-slate-700 text-sm font-semibold">
                                             {s.value.toFixed(0)}%
                                         </p>
                                     </div>
@@ -92,7 +92,7 @@ export function VerificationHistory() {
 
                             {/* Date + pass/fail label */}
                             <div className="text-right shrink-0">
-                                <p className="text-white/30 text-xs">
+                                <p className="text-slate-400 text-xs">
                                     {new Date(item.createdAt).toLocaleDateString()}
                                 </p>
                                 <span

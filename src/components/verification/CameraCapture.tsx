@@ -311,13 +311,30 @@ function CornerMarker({
     };
 
     const color = isGood ? 'rgba(52,211,153,0.9)' : 'rgba(255,255,255,0.7)';
-    const b = `3px solid ${color}`;
+    const w = '3px';
+    const s = 'solid';
 
     const borders: Record<Corner, React.CSSProperties> = {
-        tl: { borderTop: b, borderLeft: b, borderRadius: '4px 0 0 0' },
-        tr: { borderTop: b, borderRight: b, borderRadius: '0 4px 0 0' },
-        bl: { borderBottom: b, borderLeft: b, borderRadius: '0 0 0 4px' },
-        br: { borderBottom: b, borderRight: b, borderRadius: '0 0 4px 0' },
+        tl: {
+            borderTopWidth: w, borderTopStyle: s, borderTopColor: color,
+            borderLeftWidth: w, borderLeftStyle: s, borderLeftColor: color,
+            borderRadius: '4px 0 0 0',
+        },
+        tr: {
+            borderTopWidth: w, borderTopStyle: s, borderTopColor: color,
+            borderRightWidth: w, borderRightStyle: s, borderRightColor: color,
+            borderRadius: '0 4px 0 0',
+        },
+        bl: {
+            borderBottomWidth: w, borderBottomStyle: s, borderBottomColor: color,
+            borderLeftWidth: w, borderLeftStyle: s, borderLeftColor: color,
+            borderRadius: '0 0 0 4px',
+        },
+        br: {
+            borderBottomWidth: w, borderBottomStyle: s, borderBottomColor: color,
+            borderRightWidth: w, borderRightStyle: s, borderRightColor: color,
+            borderRadius: '0 0 4px 0',
+        },
     };
 
     return (
@@ -326,7 +343,7 @@ function CornerMarker({
                 position: 'absolute',
                 width: '20px',
                 height: '20px',
-                transition: 'border-color 0.3s',
+                transition: 'border-top-color 0.3s, border-right-color 0.3s, border-bottom-color 0.3s, border-left-color 0.3s',
                 ...positions[corner],
                 ...borders[corner],
             }}

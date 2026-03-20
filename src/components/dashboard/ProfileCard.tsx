@@ -74,22 +74,22 @@ export function ProfileCard() {
             {/* Header row — avatar + name + email */}
             <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center gap-4">
-                    {/* Avatar circle with gradient and first initial */}
+                    {/* Avatar circle — solid indigo (no gradient) */}
                     <div
                         className="w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-lg shrink-0"
                         style={{
-                            background: 'linear-gradient(135deg, #6366f1, #a78bfa)',
-                            boxShadow: '0 0 16px rgba(99,102,241,0.4)',
+                            backgroundColor: '#6366f1',
+                            boxShadow: '0 0 16px rgba(99,102,241,0.35)',
                         }}
                     >
                         {user?.firstName?.[0]?.toUpperCase()}
                     </div>
 
                     <div>
-                        <p className="text-white font-semibold">
+                        <p className="text-slate-800 font-semibold">
                             {user?.firstName} {user?.lastName}
                         </p>
-                        <p className="text-white/40 text-sm">{user?.email}</p>
+                        <p className="text-slate-400 text-sm">{user?.email}</p>
                     </div>
                 </div>
 

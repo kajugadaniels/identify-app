@@ -40,7 +40,7 @@ export const GlassInput = forwardRef<HTMLInputElement, GlassInputProps>(
                 {label && (
                     <label
                         htmlFor={inputId}
-                        className="text-sm font-medium text-white/70 select-none"
+                        className="text-sm font-medium text-slate-600 select-none"
                     >
                         {label}
                     </label>
@@ -61,7 +61,7 @@ export const GlassInput = forwardRef<HTMLInputElement, GlassInputProps>(
                 >
                     {/* Left icon */}
                     {icon && (
-                        <span className="absolute left-3.5 text-white/40 pointer-events-none">
+                        <span className="absolute left-3.5 text-slate-400 pointer-events-none">
                             {icon}
                         </span>
                     )}
@@ -87,7 +87,7 @@ export const GlassInput = forwardRef<HTMLInputElement, GlassInputProps>(
                             type="button"
                             tabIndex={-1}
                             onClick={onIconRightClick}
-                            className="absolute right-3.5 text-white/40 hover:text-white/70 transition-colors duration-150"
+                            className="absolute right-3.5 text-slate-400 hover:text-slate-600 transition-colors duration-150"
                         >
                             {iconRight}
                         </button>
@@ -113,7 +113,7 @@ export const GlassInput = forwardRef<HTMLInputElement, GlassInputProps>(
                             key="hint"
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
-                            className="text-xs text-white/40"
+                            className="text-xs text-slate-400"
                         >
                             {hint}
                         </motion.p>

@@ -3,10 +3,10 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/store/auth.store';
+import { useUiStore } from '@/store/ui.store';
 
-// Redirects to /login only after zustand has finished rehydrating from
-// localStorage. Without the _hasHydrated guard, every page reload would
-// redirect because isAuthenticated starts as false before the store loads.
+// Redirects to / and opens the login dialog when the user is not authenticated.
+// Waits for zustand to rehydrate from localStorage before deciding.
 //
 // Usage:
 //   const { user, isAuthenticated, isLoading } = useRequireAuth();
@@ -14,19 +14,18 @@ import { useAuthStore } from '@/store/auth.store';
 export function useRequireAuth() {
     const router = useRouter();
     const { isAuthenticated, user, _hasHydrated } = useAuthStore();
+    const { openAuthDialog } = useUiStore();
 
     useEffect(() => {
-        // Wait until zustand has read from localStorage before deciding
-        // whether to redirect — avoids false logout on every page reload
         if (_hasHydrated && !isAuthenticated) {
-            router.replace('/login');
+            router.replace('/');
+            openAuthDialog('login');
         }
-    }, [_hasHydrated, isAuthenticated, router]);
+    }, [_hasHydrated, isAuthenticated, router, openAuthDialog]);
 
     return {
         user,
         isAuthenticated,
-        // True while zustand is still reading from localStorage
         isLoading: !_hasHydrated,
     };
 }

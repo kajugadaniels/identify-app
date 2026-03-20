@@ -22,7 +22,11 @@ const loginSchema = z.object({
 
 type LoginFormData = z.infer<typeof loginSchema>;
 
-export function LoginForm() {
+interface LoginFormProps {
+    onSuccess?: () => void;
+}
+
+export function LoginForm({ onSuccess }: LoginFormProps) {
     const [showPassword, setShowPassword] = useState(false);
     const router = useRouter();
     const setAuth = useAuthStore((state) => state.setAuth);
@@ -47,6 +51,7 @@ export function LoginForm() {
                 description: `Good to see you again, ${user.firstName}.`,
             });
 
+            onSuccess?.();
             router.push('/dashboard');
 
         } catch (error: unknown) {

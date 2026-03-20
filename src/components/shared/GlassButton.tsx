@@ -15,36 +15,34 @@ interface GlassButtonProps
     variant?: ButtonVariant;
     size?: ButtonSize;
     loading?: boolean;
-    icon?: React.ReactNode;  // icon shown on the left
-    iconRight?: React.ReactNode; // icon shown on the right
+    icon?: React.ReactNode;
+    iconRight?: React.ReactNode;
     fullWidth?: boolean;
 }
 
 const variantStyles: Record<ButtonVariant, string> = {
-    // Solid indigo gradient — main CTA
+    // Solid indigo — main CTA (no gradient)
     primary: `
-    bg-gradient-to-r from-indigo-600 to-violet-600
-    hover:from-indigo-500 hover:to-violet-500
+    bg-indigo-600 hover:bg-indigo-500
     text-white glow-brand
-    border border-indigo-500/30
+    border border-indigo-500/20
   `,
     // Glass surface — secondary actions
     secondary: `
-    glass-md text-white/90
-    hover:bg-white/[0.12]
-    border-white/10
+    glass-md text-slate-700
+    hover:bg-white/80
+    border-slate-200/60
   `,
     // Transparent — tertiary / nav actions
     ghost: `
-    bg-transparent text-white/70
-    hover:text-white hover:bg-white/[0.06]
+    bg-transparent text-slate-500
+    hover:text-slate-800 hover:bg-slate-100
     border-transparent
   `,
-    // Red — destructive actions
+    // Solid red — destructive (no gradient)
     danger: `
-    bg-gradient-to-r from-red-600 to-rose-600
-    hover:from-red-500 hover:to-rose-500
-    text-white border border-red-500/30
+    bg-red-600 hover:bg-red-500
+    text-white border border-red-500/20
   `,
 };
 
@@ -70,21 +68,17 @@ export function GlassButton({
 
     return (
         <motion.button
-            // Subtle press animation on click
             whileTap={!isDisabled ? { scale: 0.97 } : undefined}
             whileHover={!isDisabled ? { scale: 1.01 } : undefined}
             transition={{ duration: 0.15 }}
 
             className={cn(
-                // Base styles
                 'relative inline-flex items-center justify-center',
                 'rounded-xl font-medium',
                 'transition-all duration-200',
                 'select-none outline-none',
-                // Variant + size
                 variantStyles[variant],
                 sizeStyles[size],
-                // States
                 isDisabled && 'opacity-50 cursor-not-allowed',
                 fullWidth && 'w-full',
                 className,
@@ -92,7 +86,6 @@ export function GlassButton({
             disabled={isDisabled}
             {...props}
         >
-            {/* Loading spinner replaces left icon */}
             {loading ? (
                 <Loader2Icon className="w-4 h-4 animate-spin" />
             ) : (
@@ -101,7 +94,6 @@ export function GlassButton({
 
             {children}
 
-            {/* Right icon — never shown during loading */}
             {!loading && iconRight && (
                 <span className="shrink-0">{iconRight}</span>
             )}
