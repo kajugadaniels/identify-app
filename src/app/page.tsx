@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import { motion } from 'framer-motion';
+import { motion, Variants } from 'framer-motion';
 import { GlassButton } from '@/components/shared/GlassButton';
 import { useUiStore } from '@/store/ui.store';
 import { ArrowRight, Shield, Fingerprint, ScanFace } from 'lucide-react';
@@ -208,20 +208,20 @@ function FloatingOrbs() {
 }
 
 /* ── Stagger text animation variants ────────────────────── */
-const wordContainerVariants = {
+const wordContainerVariants: Variants = {
     hidden: {},
     visible: {
         transition: { staggerChildren: 0.04, delayChildren: 0.3 },
     },
 };
 
-const wordVariants = {
+const wordVariants: Variants = {
     hidden: { opacity: 0, y: 20, filter: 'blur(8px)' },
     visible: {
         opacity: 1,
         y: 0,
         filter: 'blur(0px)',
-        transition: { duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] },
+        transition: { duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] as [number, number, number, number] },
     },
 };
 
