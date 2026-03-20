@@ -4,7 +4,7 @@ import { useEffect, useRef } from 'react';
 import { motion, Variants } from 'framer-motion';
 import { GlassButton } from '@/components/shared/GlassButton';
 import { useUiStore } from '@/store/ui.store';
-import { ArrowRight, Shield, Fingerprint, ScanFace } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 
 /* ═══════════════════════════════════════════════════════════
    Background: Animated Mesh Gradient Canvas
@@ -225,54 +225,6 @@ const wordVariants: Variants = {
     },
 };
 
-/* ── Floating feature pills ─────────────────────────────── */
-function FloatingPill({
-    icon,
-    label,
-    className,
-    delay,
-}: {
-    icon: React.ReactNode;
-    label: string;
-    className?: string;
-    delay: number;
-}) {
-    return (
-        <motion.div
-            initial={{ opacity: 0, scale: 0.8, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            transition={{
-                duration: 0.6,
-                delay,
-                ease: [0.25, 0.46, 0.45, 0.94],
-            }}
-            className={className}
-        >
-            <motion.div
-                animate={{ y: [0, -8, 0] }}
-                transition={{
-                    duration: 4 + delay,
-                    repeat: Infinity,
-                    ease: 'easeInOut',
-                }}
-                className="flex items-center gap-2 px-4 py-2.5 rounded-full"
-                style={{
-                    background: 'rgba(255, 255, 255, 0.7)',
-                    backdropFilter: 'blur(16px) saturate(1.3)',
-                    WebkitBackdropFilter: 'blur(16px) saturate(1.3)',
-                    border: '1px solid rgba(255, 255, 255, 0.6)',
-                    boxShadow:
-                        '0 8px 32px rgba(0,0,0,0.06), 0 2px 8px rgba(0,0,0,0.03), inset 0 1px 0 rgba(255,255,255,0.8)',
-                }}
-            >
-                <span className="text-indigo-600">{icon}</span>
-                <span className="text-xs font-semibold text-slate-700 whitespace-nowrap">
-                    {label}
-                </span>
-            </motion.div>
-        </motion.div>
-    );
-}
 
 /* ═══════════════════════════════════════════════════════════
    Landing Page — Hero Only
