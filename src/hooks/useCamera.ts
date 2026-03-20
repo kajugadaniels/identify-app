@@ -29,7 +29,6 @@ interface UseCameraReturn {
 const BRIGHTNESS_MIN = 60;   // 0–255 — below this is too dark
 const BRIGHTNESS_GOOD = 80;   // above this is well-lit
 const BLUR_THRESHOLD = 80;   // Laplacian variance — below this is blurry
-const SMALL_THRESHOLD = 0.25; // card must fill at least 25% of frame
 
 export function useCamera(): UseCameraReturn {
     const videoRef = useRef<HTMLVideoElement | null>(null);
