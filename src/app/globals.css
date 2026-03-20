@@ -1,250 +1,156 @@
-/* src/app/globals.css */
-
 @import "tailwindcss";
+@import "tw-animate-css";
 
-/* ── Tailwind v4 theme tokens ─────────────────────────
-   All design tokens defined here replace tailwind.config.ts
-   @theme injects these as CSS variables AND Tailwind utilities
-──────────────────────────────────────────────────────── */
-@theme {
+@custom-variant dark (&:is(.dark *));
 
-  /* ── Brand colors ───────────────────────────────── */
-  --color-brand-50:  #eef2ff;
-  --color-brand-100: #e0e7ff;
-  --color-brand-400: #818cf8;
-  --color-brand-500: #6366f1;
-  --color-brand-600: #4f46e5;
-  --color-brand-700: #4338ca;
-  --color-brand-900: #1e1b4b;
-
-  /* ── Font family ────────────────────────────────── */
-  --font-family-sans: var(--font-dm-sans), system-ui, sans-serif;
-
-  /* ── Border radius ──────────────────────────────── */
-  --radius-4xl: 2rem;
-
-  /* ── Backdrop blur ──────────────────────────────── */
-  --blur-xs:  2px;
-  --blur-4xl: 72px;
-
-  /* ── Animations ─────────────────────────────────── */
-  --animate-fade-in:      fadeIn 0.5s ease-out;
-  --animate-fade-up:      fadeUp 0.6s ease-out;
-  --animate-fade-up-slow: fadeUp 1s ease-out;
-  --animate-pulse-slow:   pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-  --animate-float:        float 6s ease-in-out infinite;
-
-  /* ── Keyframes ───────────────────────────────────── */
-  @keyframes fadeIn {
-    0%   { opacity: 0; }
-    100% { opacity: 1; }
-  }
-
-  @keyframes fadeUp {
-    0%   { opacity: 0; transform: translateY(20px); }
-    100% { opacity: 1; transform: translateY(0); }
-  }
-
-  @keyframes float {
-    0%, 100% { transform: translateY(0px); }
-    50%       { transform: translateY(-10px); }
-  }
+:root {
+  --radius: 0.65rem;
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+  --chart-1: oklch(0.646 0.222 41.116);
+  --chart-2: oklch(0.6 0.118 184.704);
+  --chart-3: oklch(0.398 0.07 227.392);
+  --chart-4: oklch(0.828 0.189 84.429);
+  --chart-5: oklch(0.769 0.188 70.08);
+  --radius: 0.625rem;
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
+  --font-sans: Geist Mono, ui-monospace, monospace;
+  --font-serif: serif;
+  --font-mono: JetBrains Mono, monospace;
+  --radius: 0.75rem;
+  --shadow-2xs: 0px 1px 4px 0px hsl(0 0% 0% / 0.03);
+  --shadow-xs: 0px 1px 4px 0px hsl(0 0% 0% / 0.03);
+  --shadow-sm:
+    0px 1px 4px 0px hsl(0 0% 0% / 0.05), 0px 1px 2px -1px hsl(0 0% 0% / 0.05);
+  --shadow:
+    0px 1px 4px 0px hsl(0 0% 0% / 0.05), 0px 1px 2px -1px hsl(0 0% 0% / 0.05);
+  --shadow-md:
+    0px 1px 4px 0px hsl(0 0% 0% / 0.05), 0px 2px 4px -1px hsl(0 0% 0% / 0.05);
+  --shadow-lg:
+    0px 1px 4px 0px hsl(0 0% 0% / 0.05), 0px 4px 6px -1px hsl(0 0% 0% / 0.05);
+  --shadow-xl:
+    0px 1px 4px 0px hsl(0 0% 0% / 0.05), 0px 8px 10px -1px hsl(0 0% 0% / 0.05);
+  --shadow-2xl: 0px 1px 4px 0px hsl(0 0% 0% / 0.13);
 }
 
-/* ── Base styles ──────────────────────────────────── */
-@layer base {
-  *, *::before, *::after {
-    box-sizing: border-box;
-    border-color: var(--color-border, rgba(148, 163, 184, 0.2));
-  }
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.922 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.556 0 0);
+  --chart-1: oklch(0.488 0.243 264.376);
+  --chart-2: oklch(0.696 0.17 162.48);
+  --chart-3: oklch(0.769 0.188 70.08);
+  --chart-4: oklch(0.627 0.265 303.9);
+  --chart-5: oklch(0.645 0.246 16.439);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.556 0 0);
 
-  html {
-    color-scheme: light;
-    scroll-behavior: smooth;
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+  --font-serif: var(--font-serif);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+
+  --shadow-2xs: var(--shadow-2xs);
+  --shadow-xs: var(--shadow-xs);
+  --shadow-sm: var(--shadow-sm);
+  --shadow: var(--shadow);
+  --shadow-md: var(--shadow-md);
+  --shadow-lg: var(--shadow-lg);
+  --shadow-xl: var(--shadow-xl);
+  --shadow-2xl: var(--shadow-2xl);
+
+  --tracking-tighter: calc(var(--tracking-normal) - 0.05em);
+  --tracking-tight: calc(var(--tracking-normal) - 0.025em);
+  --tracking-normal: var(--tracking-normal);
+  --tracking-wide: calc(var(--tracking-normal) + 0.025em);
+  --tracking-wider: calc(var(--tracking-normal) + 0.05em);
+  --tracking-widest: calc(var(--tracking-normal) + 0.1em);
+}
+
+body {
+  letter-spacing: var(--tracking-normal);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
   }
 
   body {
-    font-family: var(--font-family-sans);
-    background-color: #f1f5f9;
-    color: #0f172a;
-    overflow-x: hidden;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+    @apply bg-background text-foreground;
   }
+}
 
-  /* Focus ring — accessible and branded */
-  *:focus-visible {
-    outline: 2px solid #6366f1;
-    outline-offset: 2px;
-    border-radius: 4px;
-  }
-
-  button {
+/* Add cursor pointer to buttons by default - this is coming from tailwind docs */
+@layer base {
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
     cursor: pointer;
   }
 }
 
-/* ── Glassmorphism component classes ──────────────── */
-@layer components {
-
-  /* Base glass — for backgrounds and wrappers */
-  .glass {
-    background: rgba(255, 255, 255, 0.55);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 255, 255, 0.80);
-    box-shadow: 0 2px 16px rgba(0, 0, 0, 0.05);
+@keyframes sound-wave {
+  0% {
+    height: 10%;
   }
 
-  /* Medium glass — for cards */
-  .glass-md {
-    background: rgba(255, 255, 255, 0.70);
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
-    border: 1px solid rgba(255, 255, 255, 0.85);
-    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.07);
+  50% {
+    height: 100%;
   }
 
-  /* Strong glass — for modals, auth forms */
-  .glass-lg {
-    background: rgba(255, 255, 255, 0.80);
-    backdrop-filter: blur(40px);
-    -webkit-backdrop-filter: blur(40px);
-    border: 1px solid rgba(255, 255, 255, 0.90);
-    box-shadow:
-      0 8px 40px rgba(0, 0, 0, 0.09),
-      inset 0 1px 0 rgba(255, 255, 255, 0.9);
-  }
-
-  /* Navbar glass */
-  .glass-nav {
-    background: rgba(248, 250, 252, 0.85);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border-bottom: 1px solid rgba(226, 232, 240, 0.70);
-  }
-
-  /* Brand accent text — solid indigo (no gradient) */
-  .gradient-text {
-    color: #6366f1;
-  }
-
-  /* Success accent text */
-  .gradient-text-success {
-    color: #059669;
-  }
-
-  /* Glow for brand buttons */
-  .glow-brand {
-    box-shadow:
-      0 0 20px rgba(99, 102, 241, 0.35),
-      0 0 60px rgba(99, 102, 241, 0.10);
-  }
-
-  /* Glow for success state */
-  .glow-success {
-    box-shadow:
-      0 0 20px rgba(52, 211, 153, 0.35),
-      0 0 60px rgba(52, 211, 153, 0.10);
-  }
-
-  /* Glow for error state */
-  .glow-error {
-    box-shadow:
-      0 0 20px rgba(248, 113, 113, 0.35),
-      0 0 60px rgba(248, 113, 113, 0.10);
-  }
-
-  /* Score circle container */
-  .score-ring {
-    filter: drop-shadow(0 0 10px rgba(99, 102, 241, 0.5));
-  }
-
-  /* Input glass style — light */
-  .input-glass {
-    background: rgba(255, 255, 255, 0.80);
-    border: 1px solid rgba(148, 163, 184, 0.35);
-    color: #0f172a;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
-  }
-
-  .input-glass::placeholder {
-    color: rgba(148, 163, 184, 0.80);
-  }
-
-  .input-glass:focus {
-    border-color: rgba(99, 102, 241, 0.60);
-    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
-    outline: none;
-    background: rgba(255, 255, 255, 0.95);
-  }
-
-  /* Dropzone upload area */
-  .dropzone {
-    border: 2px dashed rgba(99, 102, 241, 0.35);
-    background: rgba(99, 102, 241, 0.03);
-    transition: all 0.2s ease;
-  }
-
-  .dropzone:hover,
-  .dropzone-active {
-    border-color: rgba(99, 102, 241, 0.65);
-    background: rgba(99, 102, 241, 0.06);
-    box-shadow: 0 0 20px rgba(99, 102, 241, 0.10);
-  }
-
-  /* Step indicator pill — solid colors (no gradient) */
-  .step-pill-active {
-    background: #6366f1;
-    box-shadow: 0 2px 12px rgba(99, 102, 241, 0.40);
-  }
-
-  .step-pill-done {
-    background: #059669;
-    box-shadow: 0 2px 12px rgba(5, 150, 105, 0.30);
-  }
-
-  .step-pill-pending {
-    background: rgba(148, 163, 184, 0.15);
-    border: 1px solid rgba(148, 163, 184, 0.30);
+  100% {
+    height: 10%;
   }
 }
 
-/* ── Utility overrides ────────────────────────────── */
-@layer utilities {
-
-  /* Smooth page entrance */
-  .page-enter {
-    animation: fadeUp 0.6s ease-out;
-  }
-
-  /* Custom scrollbar */
-  ::-webkit-scrollbar {
-    width: 6px;
-  }
-  ::-webkit-scrollbar-track {
-    background: transparent;
-  }
-  ::-webkit-scrollbar-thumb {
-    background: rgba(99, 102, 241, 0.25);
-    border-radius: 3px;
-  }
-  ::-webkit-scrollbar-thumb:hover {
-    background: rgba(99, 102, 241, 0.50);
-  }
-
-  /* Hide scrollbar but keep scroll */
-  .scrollbar-hide {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
-  .scrollbar-hide::-webkit-scrollbar {
-    display: none;
-  }
-
-  /* Skeleton loading — pulse instead of shimmer gradient */
-  .skeleton {
-    background: rgba(148, 163, 184, 0.18);
-    animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-  }
+.animate-sound-wave {
+  animation: sound-wave 1.2s ease-in-out infinite;
 }
